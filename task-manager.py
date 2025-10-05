@@ -14,7 +14,7 @@ def add(tasks):
         "nametask": nametask,
         "desctask": desctask,
         "creationdate": creationdate,
-        "status": "todo"
+        "status": "To-do"
     }
 
     tasks.append(task)
@@ -36,7 +36,7 @@ def see_all(tasks):
         return print("Not tasks created yet")
     
     for task in tasks:
-        print(f"{task["id"]} - {task["nametask"]}: {task["desctask"]}\nCreated at: {task["creationdate"]}\n")
+        print(f"{task["id"]} - {task["nametask"]}: {task["desctask"]}\nStatus: {task["status"]}\nCreated at: {task["creationdate"]}\n")
     
     main()
 
@@ -51,10 +51,26 @@ def delete(tasks):
 
     main()
 
+def update(tasks):
+    idtask = int(input("Insert the id of the task: "))
+    idtask -= 1
+
+    statusupdate = int(input("0: To-do\n1: Done\n"))
+
+    if statusupdate == 0:
+        tasks[idtask].update({"status": "To-do"})
+    elif statusupdate == 1:
+        tasks[idtask].update({"status": "Done"})
+    else:
+        print("Insert a valid number")
+
+    with open("task-data.json", "w") as a:
+        json.dump(tasks, a, indent=4)
+
 def main():
     tasks = loadtasks()
     print("\nCommands:")
-    print("add\nupdate\ndelete\nsee-all\nsee-done\nsee-inprog\nsee-todo\nexit\n")
+    print("add\nupdate-status\ndelete\nsee-all\nsee-done\nsee-todo\nexit\n")
 
     command = input()
 
@@ -67,6 +83,9 @@ def main():
 
         case "delete":
             delete(tasks)
+
+        case "update-status":
+            update(tasks)
 
 if __name__ == '__main__':
     main()
