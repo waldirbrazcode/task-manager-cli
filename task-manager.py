@@ -45,7 +45,7 @@ def see_all(tasks):
 def delete(tasks):
     idtask = int(input("Insert the id of the task: "))
 
-    if idtask > len(tasks) or idtask < 0:
+    if idtask < 0:
         print("Invalid number id")
         main()
 
