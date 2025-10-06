@@ -44,13 +44,14 @@ def see_all(tasks):
 
 def delete(tasks):
     idtask = int(input("Insert the id of the task: "))
-    idtask -= 1
 
     if idtask > len(tasks) or idtask < 0:
         print("Invalid number id")
         main()
 
-    tasks.pop(idtask)
+    for task in tasks:
+        if task["id"] == idtask:
+            tasks.remove(task)
 
     for order, task in enumerate(tasks, start=1):
         task.update({"order": order})
