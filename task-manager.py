@@ -10,6 +10,7 @@ def add(tasks):
     creationdate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     task = {
+        "order": len(tasks) + 1,
         "id": len(tasks) + 1,
         "nametask": nametask,
         "desctask": desctask,
@@ -33,10 +34,11 @@ def loadtasks():
     
 def see_all(tasks):
     if not tasks:
-        return print("Not tasks created yet")
+        print("Not tasks created yet")
+        main()
     
     for task in tasks:
-        print(f"{task["id"]} - {task["nametask"]}: {task["desctask"]}\nStatus: {task["status"]}\nCreated at: {task["creationdate"]}\n")
+        print(f"{task["order"]} - {task["nametask"]}: {task["desctask"]}\nId: {task["id"]}\nStatus: {task["status"]}\nCreated at: {task["creationdate"]}\n")
     
     main()
 
@@ -44,9 +46,24 @@ def delete(tasks):
     idtask = int(input("Insert the id of the task: "))
     idtask -= 1
 
+    if idtask > len(tasks) or idtask < 0:
+        print("Invalid number id")
+        main()
+
     tasks.pop(idtask)
 
+    for order, task in enumerate(tasks, start=1):
+        task.update({"order": order})
+
     with open('task-data.json', 'w') as a:
+        json.dump(tasks, a, indent=4)
+
+    main()
+
+def deleteall(tasks):
+    tasks.clear()
+
+    with open("task-data.json", "w") as a:
         json.dump(tasks, a, indent=4)
 
     main()
@@ -54,6 +71,10 @@ def delete(tasks):
 def update(tasks):
     idtask = int(input("Insert the id of the task: "))
     idtask -= 1
+
+    if idtask > len(tasks) or idtask < 0:
+        print("Invalid number id")
+        main()
 
     statusupdate = int(input("0: To-do\n1: Done\n"))
 
@@ -63,14 +84,17 @@ def update(tasks):
         tasks[idtask].update({"status": "Done"})
     else:
         print("Insert a valid number")
+        main()
 
     with open("task-data.json", "w") as a:
         json.dump(tasks, a, indent=4)
 
+    main()
+
 def main():
     tasks = loadtasks()
     print("\nCommands:")
-    print("add\nupdate-status\ndelete\nsee-all\nsee-done\nsee-todo\nexit\n")
+    print("add\nupdate\ndelete\ndelete-all\nsee-all\nsee-done\nsee-todo\nexit\n")
 
     command = input()
 
@@ -84,7 +108,10 @@ def main():
         case "delete":
             delete(tasks)
 
-        case "update-status":
+        case "delete-all":
+            deleteall(tasks)
+
+        case "update":
             update(tasks)
 
 if __name__ == '__main__':
