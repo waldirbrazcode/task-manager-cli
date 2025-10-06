@@ -95,7 +95,7 @@ def update(tasks):
 def main():
     tasks = loadtasks()
     print("\nCommands:")
-    print("add\nupdate\ndelete\ndelete-all\nsee-all\nsee-done\nsee-todo\nexit\n")
+    print("add\nupdate\ndelete\ndelete-all\nsee-all\n")
 
     command = input()
 
